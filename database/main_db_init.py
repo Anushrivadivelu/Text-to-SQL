@@ -34,16 +34,6 @@ CREATE TABLE IF NOT EXISTS employees (
 );
 """)
 
-cur.execute("""
-CREATE TABLE IF NOT EXISTS sales (
-    sale_id INTEGER PRIMARY KEY,
-    emp_id INTEGER,
-    amount INTEGER,
-    sale_date TEXT,
-    FOREIGN KEY (emp_id) REFERENCES employees(emp_id)
-);
-""")
-
 # ------------------ SEED DATA ------------------
 
 departments = [
@@ -110,5 +100,6 @@ cur.executemany(
 
 conn.commit()
 conn.close()
+
 
 print("Database initialized safely")
