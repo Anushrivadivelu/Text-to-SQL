@@ -1,3 +1,5 @@
+
+
 SENSITIVE_COLUMNS = {"salary"}
 
 def mask_value(_):
@@ -23,14 +25,11 @@ def apply_role_based_filter(data, role, user_id=None):
         safe_row = {}
         for col, val in row.items():
 
-            # Salary logic
             if col in SENSITIVE_COLUMNS:
                 if role == "HR":
-                    safe_row[col] = val               # HR sees all salaries
-                elif role == "ADMIN":
-                    safe_row[col] = mask_value(val)   # Admin masked
+                    safe_row[col] = val
                 else:
-                    # Other roles see only their own salary
+                    # ADMIN & others see salary only if it's their own
                     safe_row[col] = val if emp_id == user_id else mask_value(val)
             else:
                 safe_row[col] = val
@@ -38,5 +37,4 @@ def apply_role_based_filter(data, role, user_id=None):
         filtered.append(safe_row)
 
     return filtered
-
 
