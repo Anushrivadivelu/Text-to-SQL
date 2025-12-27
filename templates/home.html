@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMET | SQL Query Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-space: #0a0e29;
+            --ocean-deep: #0c1446;
+            --ocean-blue: #1a237e;
+            --wave-blue: #283593;
+            --starlight: #e3f2fd;
+            --nebula: #7c4dff;
+            --planet: #536dfe;
+            --comet: #00b0ff;
+            --galaxy: #311b92;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--deep-space) 0%, var(--ocean-deep) 50%, var(--galaxy) 100%);
+            color: var(--starlight);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Space Background with Stars */
+        .space-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+
+        /* Floating Comet Logo */
+        .floating-comet {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            animation: cometFloat 20s infinite ease-in-out;
+        }
+
+        .comet-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            padding: 10px 15px;
+            background: rgba(10, 14, 41, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(124, 77, 255, 0.2);
+            transition: var(--transition);
+        }
+
+        .comet-logo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 176, 255, 0.3);
+            border-color: var(--comet);
+        }
+
+        .comet-icon {
+            font-size: 24px;
+            color: var(--comet);
+            animation: logoPulse 2s infinite;
+        }
+
+        .comet-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--starlight) 0%, var(--comet) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+        }
+
+        @keyframes cometFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(10px, -10px) rotate(5deg); }
+            50% { transform: translate(0, -20px) rotate(0deg); }
+            75% { transform: translate(-10px, -10px) rotate(-5deg); }
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Floating Astronaut */
+        .floating-astronaut {
+            position: fixed;
+            bottom: 50px;
+            right: 50px;
+            z-index: 100;
+            animation: astronautFloat 15s infinite ease-in-out;
+            pointer-events: none;
+        }
+
+        .astronaut {
+            font-size: 60px;
+            filter: drop-shadow(0 0 20px rgba(0, 176, 255, 0.5));
+            animation: astronautWave 5s infinite;
+        }
+
+        @keyframes astronautFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-20px) rotate(10deg); }
+            50% { transform: translateY(10px) rotate(-5deg); }
+            75% { transform: translateY(-30px) rotate(-10deg); }
+        }
+
+        @keyframes astronautWave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(-15deg); }
+        }
+
+        /* Ocean Waves */
+        .ocean-waves {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(transparent, rgba(26, 35, 126, 0.3));
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            height: 100px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 100"><path d="M0,50 C150,100 350,0 500,50 C650,100 850,0 800,50 L800,100 L0,100 Z" fill="%231a237e"/></svg>');
+            background-repeat: repeat-x;
+            animation: wave 12s linear infinite;
+            opacity: 0.6;
+        }
+
+        .wave:nth-child(2) {
+            animation: wave 18s linear infinite;
+            opacity: 0.4;
+            bottom: 20px;
+        }
+
+        .wave:nth-child(3) {
+            animation: wave 24s linear infinite;
+            opacity: 0.2;
+            bottom: 40px;
+        }
+
+        @keyframes wave {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Floating Planets */
+        .planet {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(1px);
+            z-index: -1;
+        }
+
+        .planet-1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle at 30% 30%, var(--nebula), transparent);
+            top: 10%;
+            right: 10%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .planet-2 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle at 70% 30%, var(--planet), transparent);
+            bottom: 20%;
+            left: 5%;
+            animation: float 25s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Main Container */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Header */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+            padding: 25px;
+            background: rgba(10, 14, 41, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(124, 77, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            margin-top: 80px;
+        }
+
+        .header-content {
+            flex: 1;
+        }
+
+        .header-greeting {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--starlight) 0%, var(--comet) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            animation: textShimmer 3s infinite;
+        }
+
+        @keyframes textShimmer {
+            0%, 100% { background-position: -200% center; }
+            50% { background-position: 200% center; }
+        }
+
+        .header-subtitle {
+            font-size: 16px;
+            opacity: 0.8;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 15px 25px;
+            background: rgba(26, 35, 126, 0.3);
+            border-radius: 16px;
+            border: 1px solid rgba(0, 176, 255, 0.2);
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--comet) 0%, var(--nebula) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            animation: pulse 3s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--starlight);
+            margin-bottom: 5px;
+        }
+
+        .user-role {
+            font-size: 14px;
+            color: var(--comet);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fecaca;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            position: relative;
+        }
+
+        /* Query Container */
+        .query-container {
+            background: rgba(10, 14, 41, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid rgba(124, 77, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .query-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--comet), var(--nebula));
+        }
+
+        .query-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .query-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--comet) 0%, var(--planet) 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 10px 30px rgba(0, 176, 255, 0.3);
+        }
+
+        .query-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--starlight) 0%, var(--comet) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .query-subtitle {
+            font-size: 16px;
+            opacity: 0.8;
+            margin-top: 5px;
+            font-weight: 300;
+        }
+
+        /* Query Form */
+        .query-form {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .query-input-group {
+            position: relative;
+        }
+
+        .query-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 25px;
+            background: rgba(26, 35, 126, 0.2);
+            border: 2px solid rgba(124, 77, 255, 0.3);
+            border-radius: 20px;
+            color: var(--starlight);
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            resize: vertical;
+            transition: var(--transition);
+            line-height: 1.6;
+        }
+
+        .query-textarea:focus {
+            outline: none;
+            border-color: var(--comet);
+            box-shadow: 0 0 0 4px rgba(0, 176, 255, 0.1);
+            background: rgba(26, 35, 126, 0.4);
+        }
+
+        .query-textarea::placeholder {
+            color: rgba(227, 242, 253, 0.5);
+            font-style: italic;
+        }
+
+        .query-hint {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            font-size: 12px;
+            color: rgba(227, 242, 253, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .query-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: flex-end;
+        }
+
+        .submit-btn {
+            padding: 18px 40px;
+            background: linear-gradient(135deg, var(--comet) 0%, var(--planet) 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 176, 255, 0.4);
+        }
+
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(30deg);
+            transition: transform 0.8s;
+        }
+
+        .submit-btn:hover::after {
+            transform: translateX(400%) rotate(30deg);
+        }
+
+        .clear-btn {
+            padding: 18px 40px;
+            background: rgba(227, 242, 253, 0.1);
+            color: var(--starlight);
+            border: 1px solid rgba(227, 242, 253, 0.2);
+            border-radius: 16px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: 1px;
+        }
+
+        .clear-btn:hover {
+            background: rgba(227, 242, 253, 0.2);
+            transform: translateY(-3px);
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: rgba(10, 14, 41, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(124, 77, 255, 0.1);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 176, 255, 0.3);
+            box-shadow: 0 15px 30px rgba(0, 176, 255, 0.2);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--comet), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--nebula) 0%, var(--planet) 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--starlight);
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .dashboard-footer {
+            margin-top: 60px;
+            text-align: center;
+            padding: 30px;
+            background: rgba(10, 14, 41, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(124, 77, 255, 0.2);
+        }
+
+        .footer-text {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .footer-links a {
+            color: var(--starlight);
+            text-decoration: none;
+            font-size: 13px;
+            opacity: 0.7;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+            color: var(--comet);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .floating-comet {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 20px;
+            }
+            
+            .floating-astronaut {
+                display: none;
+            }
+            
+            .dashboard-header {
+                margin-top: 20px;
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .user-info {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .user-details {
+                text-align: center;
+            }
+
+            .header-greeting {
+                font-size: 28px;
+            }
+
+            .query-container {
+                padding: 25px;
+            }
+
+            .query-title {
+                font-size: 24px;
+            }
+
+            .query-actions {
+                flex-direction: column;
+            }
+
+            .submit-btn, .clear-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Shimmer Effect for Text */
+        .shimmer-text {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shimmer-text::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            100% { left: 100%; }
+        }
+
+        /* Comet Trail Animation */
+        @keyframes cometTrail {
+            0% {
+                transform: translateX(-100px) translateY(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(calc(100vw + 100px)) translateY(100px);
+                opacity: 0;
+            }
+        }
+
+        .comet-trail-effect {
+            position: fixed;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--comet), transparent);
+            filter: blur(1px);
+            z-index: -1;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Space Background -->
+    <div class="space-background">
+        <div class="stars"></div>
+        <div class="planet planet-1"></div>
+        <div class="planet planet-2"></div>
+    </div>
+
+    <!-- COMET Logo -->
+    <div class="floating-comet">
+        <a href="/" class="comet-logo">
+            <div class="comet-icon">🚀</div>
+            <div class="comet-text">Level UP</div>
+        </a>
+    </div>
+
+    <!-- Floating Astronaut -->
+    <div class="floating-astronaut">
+        <div class="astronaut">👨‍🚀</div>
+    </div>
+
+    <!-- Ocean Waves -->
+    <div class="ocean-waves">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1 class="header-greeting shimmer-text">
+                    How may I help you today, 
+                    {% if username and username != "None" %}
+                        {{ username }}
+                    {% else %}
+                        Explorer
+                    {% endif %}?
+                </h1>
+                <p class="header-subtitle">
+                    Natural language to SQL query assistant
+                </p>
+            </div>
+            
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-astronaut"></i>
+                </div>
+                <div class="user-details">
+                    <div class="user-name">
+                        {% if username and username != "None" %}
+                            {{ username }}
+                        {% else %}
+                            Guest
+                        {% endif %}
+                    </div>
+                    <div class="user-role">
+                        {% if role and role != "None" %}
+                            {{ role }}
+                        {% else %}
+                            Explorer
+                        {% endif %}
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Query Section -->
+            <section class="query-container">
+                <div class="query-header">
+                    <div class="query-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div>
+                        <h2 class="query-title">Level UP's Query Assistant</h2>
+                        <p class="query-subtitle">Describe what you need in plain English</p>
+                    </div>
+                </div>
+
+                <form class="query-form" id="sqlQueryForm" method="POST" action="{{ url_for('query') }}">
+                    <div class="query-input-group">
+                        <textarea 
+                            class="query-textarea" 
+                            id="queryInput"
+                            name="query"
+                            placeholder="Ask your question..."
+                            rows="8"
+                            required></textarea>
+                    </div>
+
+                    <div class="query-actions">
+                        <button type="button" class="clear-btn" onclick="clearQuery()">
+                            <i class="fas fa-broom"></i>
+                            Clear
+                        </button>
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-arrow-up"></i>
+                            Generate SQL
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Features Grid -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="feature-title">AI-Powered Translation</h3>
+                    <p class="feature-desc">
+                        Converts natural language to optimized SQL queries using AI models.
+                        Understands context and relationships across databases.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Secure Execution</h3>
+                    <p class="feature-desc">
+                        All queries execute with role-based permissions.
+                        Automatic SQL injection prevention and validation protocols.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="feature-title">Smart Suggestions</h3>
+                    <p class="feature-desc">
+                        Get intelligent suggestions for query optimization and data visualization.
+                        Learn from patterns in your exploration history.
+                    </p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="dashboard-footer">
+            <p class="footer-text">
+                © 2026 Level UP Operations Management & Exploration Technology • Level UP v2.0
+            </p>
+            <p class="footer-text">
+                All database interactions are logged and monitored for security compliance.
+            </p>
+            <div class="footer-links">
+                <a href="#"><i class="fas fa-book"></i> Documentation</a>
+                <a href="#"><i class="fas fa-history"></i> History</a>
+                <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                <a href="#"><i class="fas fa-question-circle"></i> Support</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Create dynamic stars
+        function createStars() {
+            const starsContainer = document.querySelector('.stars');
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.style.position = 'absolute';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.background = 'white';
+                star.style.borderRadius = '50%';
+                star.style.opacity = Math.random() * 0.7 + 0.3;
+                star.style.animation = `twinkle ${Math.random() * 4 + 2}s infinite`;
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Create comet trail effects
+        function createCometTrail() {
+            const trail = document.createElement('div');
+            trail.className = 'comet-trail-effect';
+            trail.style.top = Math.random() * 50 + '%';
+            trail.style.left = '-100px';
+            document.body.appendChild(trail);
+            
+            const duration = Math.random() * 3 + 2;
+            trail.animate([
+                { transform: 'translateX(-100px) translateY(0)', opacity: 0 },
+                { transform: 'translateX(20vw) translateY(20px)', opacity: 0.7 },
+                { transform: `translateX(calc(100vw + 100px)) translateY(${Math.random() * 100 - 50}px)`, opacity: 0 }
+            ], {
+                duration: duration * 1000,
+                easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+            });
+            
+            setTimeout(() => trail.remove(), duration * 1000);
+        }
+
+        // Form submission
+        document.getElementById('sqlQueryForm').addEventListener('submit', function(e) {
+            const query = document.getElementById('queryInput').value.trim();
+            
+            if (!query) {
+                e.preventDefault();
+                alert('Please enter a query description');
+                return;
+            }
+
+            // Show loading state
+            const submitBtn = this.querySelector('.submit-btn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating Trajectory...';
+            submitBtn.disabled = true;
+
+            // Create success animation
+            createCometTrail();
+            
+            // Form will submit to Flask /query endpoint
+        });
+
+        // Clear query
+        function clearQuery() {
+            document.getElementById('queryInput').value = '';
+            document.getElementById('queryInput').focus();
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to return to base?')) {
+                // Add logout animation
+                document.body.style.animation = 'fadeOut 1s ease-in-out';
+                setTimeout(() => {
+                    window.location.href = "/logout";
+                }, 1000);
+            }
+        }
+
+        // Initialize effects
+        window.addEventListener('load', function() {
+            createStars();
+            
+            // Create periodic comet trails
+            setInterval(createCometTrail, 5000);
+            
+            // Focus on query input
+            const queryInput = document.getElementById('queryInput');
+            if (queryInput) {
+                queryInput.focus();
+            }
+            
+            // Debug console logs
+            console.log("Flask User Data:", {
+                username: "{{ username }}",
+                role: "{{ role }}"
+            });
+        });
+
+        // Dynamic background interaction
+        document.addEventListener('mousemove', function(e) {
+            const planets = document.querySelectorAll('.planet');
+            planets.forEach(planet => {
+                const rect = planet.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width;
+                const y = (e.clientY - rect.top) / rect.height;
+                planet.style.transform = `translate(${x * 5}px, ${y * 5}px)`;
+            });
+        });
+
+        // Add fade out animation for logout
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+            
+            @keyframes twinkle {
+                0%, 100% { opacity: 0.3; }
+                50% { opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
